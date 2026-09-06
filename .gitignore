@@ -1,0 +1,10 @@
+# Local Shopify CLI files
+.shopify/
+*.log
+.DS_Store
+
+# Generated upload bundle
+deliverables/
+
+# Local export staging
+incoming/
