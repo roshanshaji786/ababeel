@@ -1,0 +1,30 @@
+{
+  "current": {
+    "logo": "",
+    "color_background": "#f8f5f0",
+    "color_surface": "#fffdf9",
+    "color_text": "#33252a",
+    "color_accent": "#33252a",
+    "color_accent_light": "#b88c7f",
+    "color_gold": "#c59a5c",
+    "whatsapp_number": "917012045854",
+    "store_phone": "+91 70120 45854",
+    "store_address": "Ababeel Fashions\nAmbalathara, Thiruvananthapuram\nKerala, India",
+    "instagram_url": "https://www.instagram.com/ababeelfashions2024/",
+    "facebook_url": ""
+  },
+  "presets": {
+    "Ababeel Fashions": {
+      "color_background": "#f8f5f0",
+      "color_surface": "#fffdf9",
+      "color_text": "#33252a",
+      "color_accent": "#33252a",
+      "color_accent_light": "#b88c7f",
+      "color_gold": "#c59a5c",
+      "whatsapp_number": "917012045854",
+      "store_phone": "+91 70120 45854",
+      "store_address": "Ababeel Fashions\nAmbalathara, Thiruvananthapuram\nKerala, India",
+      "instagram_url": "https://www.instagram.com/ababeelfashions2024/"
+    }
+  }
+}

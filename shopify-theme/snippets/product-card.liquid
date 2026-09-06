@@ -1,0 +1,12 @@
+<article class="product-card" data-product-card data-product-handle="{{ product.handle }}">
+  <div class="product-card__media-wrap">
+    <a class="product-card__media" href="{{ product.url }}">
+      {% if product.featured_image != blank %}{{ product.featured_image | image_url: width: 720 | image_tag: widths: '240, 360, 540, 720', loading: 'lazy', class: 'product-card__image', alt: product.featured_image.alt | default: product.title }}{% else %}{{ 'product-1' | placeholder_svg_tag: 'placeholder-svg product-card__image' }}{% endif %}
+      {% if product.available == false %}<span class="product-badge product-badge--soldout">Sold out</span>{% elsif product.compare_at_price > product.price %}<span class="product-badge">Sale</span>{% elsif product.tags contains 'new' or product.tags contains 'New' %}<span class="product-badge">New in</span>{% endif %}
+      <span class="product-card__quick">View piece <span aria-hidden="true">↗</span></span>
+    </a>
+    <button class="wishlist-button" type="button" data-wishlist="{{ product.handle }}" aria-label="Add {{ product.title | escape }} to wishlist" aria-pressed="false"><span>♡</span><span class="wishlist-button__filled">♥</span></button>
+  </div>
+  <div class="product-card__info"><div><h3><a href="{{ product.url }}">{{ product.title }}</a></h3>{% if product.vendor != blank %}<p class="product-card__vendor">{{ product.vendor }}</p>{% endif %}</div><div class="product-card__price">{% render 'price', product: product %}</div></div>
+  {% if product.available %}<form method="post" action="{{ routes.cart_add_url }}" class="quick-add-form" data-ajax-add><input type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id }}"><input type="hidden" name="quantity" value="1"><button type="submit">Quick add <span>+</span></button></form>{% endif %}
+</article>

@@ -1,0 +1,54 @@
+<div class="commerce-utility">
+  <div class="page-width commerce-utility__inner">
+    <span>Ababeel Fashions · Ambalathara, Thiruvananthapuram</span>
+    <div class="commerce-utility__links"><span>All-India delivery in 3–7 days</span><span>COD available</span><a href="https://wa.me/{{ settings.whatsapp_number | remove: '+' | remove: ' ' }}" target="_blank" rel="noopener">WhatsApp support ↗</a></div>
+  </div>
+</div>
+
+<header class="site-header commerce-header" data-header>
+  <div class="page-width commerce-header__main">
+    <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="MobileMenu" data-menu-toggle><span class="visually-hidden">Open menu</span><span class="menu-toggle__lines"></span></button>
+    <a class="site-header__logo commerce-logo" href="{{ routes.root_url }}" aria-label="{{ shop.name }} home">
+      {% if settings.logo != blank %}
+        {{ settings.logo | image_url: width: 420 | image_tag: widths: '140, 210, 280, 420', class: 'site-logo', alt: shop.name }}
+      {% else %}
+        <span class="logo-mark">A</span><span class="logo-wordmark">Ababeel <em>Fashions</em></span>
+      {% endif %}
+    </a>
+    <form class="commerce-search" action="{{ routes.search_url }}" method="get" role="search">
+      <label class="visually-hidden" for="HeaderSearch">Search for products</label>
+      <input id="HeaderSearch" type="search" name="q" value="{{ search.terms | escape }}" placeholder="Search kurtas, sets, kidswear..." autocomplete="off">
+      <button type="submit" aria-label="Search"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.8" cy="10.8" r="6.8"></circle><path d="m16 16 5 5"></path></svg></button>
+    </form>
+    <div class="commerce-actions">
+      <a href="{{ routes.account_url }}" class="commerce-action"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="3.5"></circle><path d="M5 20c.5-3.3 3-5.2 7-5.2s6.5 1.9 7 5.2"></path></svg><span>Account</span></a>
+      <a href="https://wa.me/{{ settings.whatsapp_number | remove: '+' | remove: ' ' }}" class="commerce-action commerce-action--whatsapp" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5.5 18.5 4 21l3.1-1.3A8.2 8.2 0 1 0 5.5 18.5Z"></path><path d="M8.8 8.7c.3-.4.6-.4.9-.2l1 1.1c.2.2.2.5 0 .8l-.5.7c.8 1.2 1.6 1.8 2.9 2.4l.7-.7c.2-.2.5-.3.8-.1l1.2.8c.3.2.3.5.1.9-.4.7-1 1.1-1.8 1-3-.4-5.7-3.2-6.1-5.8-.2-.4.1-.7.8-.9Z"></path></svg><span>WhatsApp</span></a>
+      <a href="{{ routes.cart_url }}" class="commerce-action commerce-cart"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 4h2l2.1 11.2a2 2 0 0 0 2 1.6h7.8a2 2 0 0 0 2-1.6L20.5 8H6"></path><circle cx="9" cy="20" r="1"></circle><circle cx="18" cy="20" r="1"></circle></svg><span>Cart</span><b class="cart-count">{{ cart.item_count }}</b></a>
+    </div>
+  </div>
+  <div class="commerce-nav-wrap">
+    <div class="page-width">
+      <nav class="commerce-nav" aria-label="Main navigation">
+        <a href="{{ routes.collections_url }}">Shop all</a>
+        <a href="{{ routes.collections_url }}/womens-ethnic-wear">Women</a>
+        <a href="{{ routes.collections_url }}/kids-wear">Kids</a>
+        <a href="{{ routes.collections_url }}/wedding-collection">Wedding edit</a>
+<a href="{{ routes.collections_url }}/new-arrivals">New arrivals by Ababeel</a>
+        <a href="{{ pages['custom-tailoring'].url | default: '/pages/custom-tailoring' }}">Custom tailoring</a>
+        <a class="commerce-nav__sale" href="{{ routes.collections_url }}/sale">Sale</a>
+      </nav>
+    </div>
+  </div>
+  <div class="mobile-menu" id="MobileMenu" data-mobile-menu hidden>
+    <nav aria-label="Mobile navigation">
+      <a href="{{ routes.root_url }}">Home</a><a href="{{ routes.collections_url }}">Shop all</a><a href="{{ routes.collections_url }}/womens-ethnic-wear">Women</a><a href="{{ routes.collections_url }}/kids-wear">Kids</a><a href="{{ routes.collections_url }}/wedding-collection">Wedding edit</a><a href="{{ routes.collections_url }}/new-arrivals">New arrivals by Ababeel</a><a href="{{ pages['custom-tailoring'].url | default: '/pages/custom-tailoring' }}">Custom tailoring</a><a href="{{ routes.search_url }}">Search</a>
+    </nav>
+  </div>
+</header>
+
+{% schema %}
+{
+  "name": "Header",
+  "settings": []
+}
+{% endschema %}

@@ -1,0 +1,45 @@
+<section class="collection-section section-spacing">
+  <div class="page-width">
+    <div class="collection-heading"><div class="breadcrumbs"><a href="{{ routes.root_url }}">Home</a><span>/</span><span>Shop</span></div><p class="eyebrow">{{ section.settings.eyebrow }}</p><h1>{{ collection.title }}</h1>{% if collection.description != blank %}<div class="collection-description rte">{{ collection.description }}</div>{% endif %}</div>
+    {% paginate collection.products by section.settings.products_per_page %}
+      <div class="collection-toolbar"><button type="button" class="filter-toggle" data-filter-toggle aria-expanded="false" aria-controls="CollectionFilters"><span class="filter-icon">☷</span> Filters</button><p>{{ collection.products_count }} {% if collection.products_count == 1 %}piece{% else %}pieces{% endif %}</p><form class="sort-form" action="{{ collection.url }}"><label for="SortBy">Sort by</label><select id="SortBy" name="sort_by" onchange="this.form.submit()">{% for option in collection.sort_options %}<option value="{{ option.value }}"{% if option.value == collection.sort_by %} selected{% endif %}>{{ option.name }}</option>{% endfor %}</select></form></div>
+      <div class="collection-layout">
+        <aside class="collection-filters" id="CollectionFilters" data-filter-panel>
+          <div class="collection-filters__header"><h2>Filter by</h2><button type="button" data-filter-close aria-label="Close filters">×</button></div>
+          <form action="{{ collection.url }}" method="get" data-filter-form>
+            {% for filter in collection.filters %}
+              <details class="filter-group"{% if filter.active_values.size > 0 %} open{% endif %}><summary>{{ filter.label }} <span>+</span></summary>
+                <div class="filter-group__values">
+                  {% case filter.type %}
+                    {% when 'list' %}
+                      {% for value in filter.values %}<label class="filter-check{% if value.count == 0 and value.active == false %} filter-check--disabled{% endif %}"><input type="checkbox" name="{{ value.param_name }}" value="{{ value.value }}"{% if value.active %} checked{% endif %}{% if value.count == 0 and value.active == false %} disabled{% endif %}><span class="checkmark"></span><span>{{ value.label }}</span><small>{{ value.count }}</small></label>{% endfor %}
+                    {% when 'boolean' %}
+                      {% for value in filter.values %}<label class="filter-check"><input type="checkbox" name="{{ value.param_name }}" value="{{ value.value }}"{% if value.active %} checked{% endif %}><span class="checkmark"></span><span>{{ value.label }}</span><small>{{ value.count }}</small></label>{% endfor %}
+                    {% when 'price_range' %}
+                      <div class="price-filter"><label>From<input type="number" name="{{ filter.min_value.param_name }}" value="{{ filter.min_value.value | money_without_currency | replace: ',', '' }}" placeholder="0"></label><label>To<input type="number" name="{{ filter.max_value.param_name }}" value="{{ filter.max_value.value | money_without_currency | replace: ',', '' }}" placeholder="Any"></label></div>
+                  {% endcase %}
+                </div>
+              </details>
+            {% endfor %}
+            {% if collection.filters.size > 0 %}<button type="submit" class="button button--dark button--full filter-apply">Apply filters</button>{% endif %}
+          </form>
+        </aside>
+        <div class="collection-products">
+          {% if collection.products_count > 0 %}<div class="product-grid product-grid--{{ section.settings.columns }}">{% for product in collection.products %}{% render 'product-card', product: product %}{% endfor %}</div>{% else %}<div class="empty-collection"><div class="empty-collection__mark">A</div><h2>New pieces are arriving soon.</h2><p>Message us on WhatsApp for today's ready stock.</p><a class="button button--dark" href="https://wa.me/{{ settings.whatsapp_number | remove: '+' | remove: ' ' }}" target="_blank" rel="noopener">Chat on WhatsApp</a></div>{% endif %}
+        </div>
+      </div>
+      {% if paginate.pages > 1 %}<nav class="pagination" aria-label="Pagination">{{ paginate | default_pagination }}</nav>{% endif %}
+    {% endpaginate %}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Main collection",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "The Ababeel edit" },
+    { "type": "range", "id": "products_per_page", "label": "Products per page", "min": 12, "max": 36, "step": 12, "default": 24 },
+    { "type": "select", "id": "columns", "label": "Desktop columns", "options": [{ "value": "2", "label": "2" }, { "value": "3", "label": "3" }, { "value": "4", "label": "4" }], "default": "4" }
+  ]
+}
+{% endschema %}

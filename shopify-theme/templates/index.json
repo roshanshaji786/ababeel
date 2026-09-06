@@ -1,0 +1,60 @@
+{
+  "sections": {
+    "hero_PAPfyK": {
+      "type": "hero",
+      "name": "Editorial hero",
+      "settings": {
+        "eyebrow": "The new festive edit",
+        "heading": "Dress for the moments that matter. - Ababeel",
+        "text": "<p>Kerala-ready ethnic wear for weddings, celebrations, and everyday grace — thoughtfully chosen by Ababeel Fashions.</p>",
+        "button_label": "Shop the collection",
+        "button_link": "",
+        "secondary_label": "Explore new arrivals",
+        "secondary_link": "",
+        "note": "Premium cotton · Sizes M–XXL · All-India delivery",
+        "image": "shopify://shop_images/Elegant_Navy_Blue_Embroidered_Kurti_with_Beige_Wide-Leg_Pants___Modest_Outfit_Inspiration.jpg"
+      }
+    },
+    "promises": {
+      "type": "value-props",
+      "blocks": {
+        "promise-1": { "type": "promise", "settings": { "icon": "✦", "title": "Thoughtfully chosen", "text": "Premium cotton and rayon styles" } },
+        "promise-2": { "type": "promise", "settings": { "icon": "⌁", "title": "Easy ordering", "text": "Secure checkout or WhatsApp help" } },
+        "promise-3": { "type": "promise", "settings": { "icon": "↗", "title": "Across India", "text": "Reliable delivery in 3–7 days" } }
+      },
+      "block_order": ["promise-1", "promise-2", "promise-3"],
+      "settings": {}
+    },
+    "categories": {
+      "type": "shop-categories",
+      "blocks": {
+        "category-1": { "type": "category", "settings": { "kicker": "THE EVERYDAY EDIT", "title": "Women's ethnic wear", "short_label": "WOMEN", "image": "shopify://shop_images/Elegant_Navy_Blue_Embroidered_Kurti_with_Beige_Wide-Leg_Pants___Modest_Outfit_Inspiration.jpg" } },
+        "category-2": { "type": "category", "settings": { "kicker": "FOR LITTLE MOMENTS", "title": "Kids' festive sets", "short_label": "KIDS" } },
+        "category-3": { "type": "category", "settings": { "kicker": "MADE FOR YOU", "title": "Custom tailoring", "short_label": "CUSTOM" } },
+        "category-4": { "type": "category", "settings": { "kicker": "OCCASION READY", "title": "Wedding edit", "short_label": "WEDDING" } }
+      },
+      "block_order": ["category-1", "category-2", "category-3", "category-4"],
+      "settings": {}
+    },
+    "featured": {
+      "type": "featured-collection",
+      "name": "Featured collection",
+      "settings": { "eyebrow": "Just in", "heading": "The pieces everyone is asking for.", "collection": "for-front", "products_to_show": 4, "columns": "4" }
+    },
+    "story": { "type": "brand-story", "settings": {} },
+    "promo": { "type": "promo-banner", "settings": {} },
+    "instagram": {
+      "type": "instagram-showcase",
+      "blocks": {
+        "post-1": { "type": "post", "settings": { "caption": "New arrivals" } },
+        "post-2": { "type": "post", "settings": { "caption": "Festive dressing" } },
+        "post-3": { "type": "post", "settings": { "caption": "Wedding edit" } },
+        "post-4": { "type": "post", "settings": { "caption": "Styled your way" } }
+      },
+      "block_order": ["post-1", "post-2", "post-3", "post-4"],
+      "settings": {}
+    },
+    "newsletter": { "type": "newsletter", "settings": {} }
+  },
+  "order": ["hero_PAPfyK", "promises", "categories", "featured", "story", "promo", "instagram", "newsletter"]
+}

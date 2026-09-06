@@ -1,0 +1,23 @@
+{
+  "general": {
+    "search": "Search",
+    "search_placeholder": "Search kurtas, sets, kidswear...",
+    "cart": "Cart",
+    "close": "Close"
+  },
+  "products": {
+    "product": {
+      "add_to_cart": "Add to cart",
+      "sold_out": "Sold out",
+      "quantity": "Quantity",
+      "select_option": "Select an option",
+      "ask_whatsapp": "Ask on WhatsApp"
+    }
+  },
+  "cart": {
+    "title": "Your cart",
+    "checkout": "Continue to checkout",
+    "empty": "Your cart is waiting for something beautiful.",
+    "continue_shopping": "Continue shopping"
+  }
+}

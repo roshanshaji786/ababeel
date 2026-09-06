@@ -1,0 +1,23 @@
+<section class="value-props{% if section.settings.compact %} value-props--compact{% endif %}">
+  <div class="page-width value-props__grid">
+    {% for block in section.blocks %}
+      <div class="value-prop" {{ block.shopify_attributes }}>
+        <span class="value-prop__icon">{{ block.settings.icon }}</span>
+        <div><h3>{{ block.settings.title }}</h3><p>{{ block.settings.text }}</p></div>
+      </div>
+    {% endfor %}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Store promises",
+  "settings": [{ "type": "checkbox", "id": "compact", "label": "Compact layout", "default": false }],
+  "blocks": [{ "type": "promise", "name": "Promise", "settings": [
+    { "type": "text", "id": "icon", "label": "Icon", "default": "✦" },
+    { "type": "text", "id": "title", "label": "Title", "default": "Thoughtfully chosen" },
+    { "type": "text", "id": "text", "label": "Text", "default": "Premium cotton and rayon styles" }
+  ] }],
+  "presets": [{ "name": "Store promises", "blocks": [{ "type": "promise", "settings": { "icon": "✦", "title": "Thoughtfully chosen", "text": "Premium cotton and rayon styles" } }, { "type": "promise", "settings": { "icon": "⌁", "title": "Easy ordering", "text": "Secure checkout or WhatsApp help" } }, { "type": "promise", "settings": { "icon": "↗", "title": "Across India", "text": "Reliable delivery in 3–7 days" } }] }]
+}
+{% endschema %}

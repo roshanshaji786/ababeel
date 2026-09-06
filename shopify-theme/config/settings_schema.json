@@ -1,0 +1,19 @@
+[
+  { "name": "theme_info", "theme_name": "Ababeel Fashions", "theme_version": "2.0.0", "theme_author": "Ababeel Fashions", "theme_documentation_url": "https://help.shopify.com/en/manual/online-store/themes" },
+  { "name": "Brand", "settings": [
+    { "type": "image_picker", "id": "logo", "label": "Logo" },
+    { "type": "color", "id": "color_background", "label": "Background", "default": "#f8f5f0" },
+    { "type": "color", "id": "color_surface", "label": "Surface", "default": "#fffdf9" },
+    { "type": "color", "id": "color_text", "label": "Text", "default": "#33252a" },
+    { "type": "color", "id": "color_accent", "label": "Accent", "default": "#33252a" },
+    { "type": "color", "id": "color_accent_light", "label": "Accent light", "default": "#b88c7f" },
+    { "type": "color", "id": "color_gold", "label": "Gold", "default": "#c59a5c" }
+  ] },
+  { "name": "Contact", "settings": [
+    { "type": "text", "id": "whatsapp_number", "label": "WhatsApp number (digits only)", "default": "917012045854", "info": "Use country code, without +, spaces, or brackets." },
+    { "type": "text", "id": "store_phone", "label": "Store phone", "default": "+91 70120 45854" },
+    { "type": "textarea", "id": "store_address", "label": "Store address", "default": "Ababeel Fashions\nAmbalathara, Thiruvananthapuram\nKerala, India" },
+    { "type": "url", "id": "instagram_url", "label": "Main Instagram URL", "default": "https://www.instagram.com/ababeelfashions2024/" },
+    { "type": "url", "id": "facebook_url", "label": "Facebook URL" }
+  ] }
+]

@@ -1,0 +1,16 @@
+<section class="search-section section-spacing">
+  <div class="page-width">
+    <div class="page-heading"><p class="eyebrow">Find your next favourite</p><h1>Search</h1></div>
+    <form action="{{ routes.search_url }}" method="get" role="search" class="search-form">
+      <label class="visually-hidden" for="SearchInput">Search products</label><input id="SearchInput" type="search" name="q" value="{{ search.terms | escape }}" placeholder="Search kurtas, sets, kidswear..." autofocus><button class="button button--dark" type="submit">Search <span aria-hidden="true">↗</span></button>
+    </form>
+    {% if search.performed %}
+      <div class="search-results-heading"><h2>Results for “{{ search.terms }}”</h2><p>{{ search.results_count }} results</p></div>
+      {% paginate search.results by 24 %}<div class="product-grid product-grid--4">{% for item in search.results %}{% if item.object_type == 'product' %}{% render 'product-card', product: item %}{% endif %}{% endfor %}</div>{% if paginate.pages > 1 %}<nav class="pagination">{{ paginate | default_pagination }}</nav>{% endif %}{% endpaginate %}
+    {% endif %}
+  </div>
+</section>
+
+{% schema %}
+{ "name": "Main search", "settings": [] }
+{% endschema %}

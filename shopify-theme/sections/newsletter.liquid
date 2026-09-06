@@ -1,0 +1,11 @@
+<section class="newsletter-section section-spacing">
+  <div class="page-width"><div class="newsletter-card"><div><p class="eyebrow">A note from Ababeel</p><h2>First look at new drops.</h2><p>Join our list for new arrivals, styling ideas, and special offers. No noise — just the good stuff.</p></div>{% form 'customer', class: 'newsletter-form' %}<input type="hidden" name="contact[tags]" value="newsletter"><label class="visually-hidden" for="NewsletterEmail">Your email address</label><div class="newsletter-form__row"><input id="NewsletterEmail" type="email" name="contact[email]" value="{{ form.email }}" placeholder="Your email address" autocorrect="off" autocapitalize="off" autocomplete="email" required><button type="submit" class="button button--dark">Join us <span>↗</span></button></div>{% if form.posted_successfully? %}<p class="form-success">Thank you — you are on the list.</p>{% endif %}{% if form.errors %}<p class="form-error">Please enter a valid email address.</p>{% endif %}<small>By subscribing, you agree to receive Ababeel updates.</small>{% endform %}</div></div>
+</section>
+
+{% schema %}
+{
+  "name": "Newsletter",
+  "settings": [],
+  "presets": [{ "name": "Newsletter" }]
+}
+{% endschema %}

@@ -1,0 +1,23 @@
+<section class="promo-banner section-spacing">
+  <div class="page-width">
+    <div class="promo-banner__inner">
+      <div><p class="eyebrow">{{ section.settings.eyebrow }}</p><h2>{{ section.settings.heading }}</h2><p>{{ section.settings.text }}</p></div>
+      <div class="promo-banner__action"><a class="button button--light" href="{{ section.settings.button_link | default: routes.collections_url }}">{{ section.settings.button_label }} <span aria-hidden="true">↗</span></a><small>{{ section.settings.note }}</small></div>
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Promotional banner",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "The wedding season edit" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Looks for every celebration." },
+    { "type": "textarea", "id": "text", "label": "Text", "default": "Discover elegant ethnic styles for the moments you will remember." },
+    { "type": "text", "id": "button_label", "label": "Button label", "default": "Shop the edit" },
+    { "type": "url", "id": "button_link", "label": "Button link" },
+    { "type": "text", "id": "note", "label": "Small note", "default": "Need help with size? WhatsApp us." }
+  ],
+  "presets": [{ "name": "Promotional banner" }]
+}
+{% endschema %}

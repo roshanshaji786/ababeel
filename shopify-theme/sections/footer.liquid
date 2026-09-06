@@ -1,0 +1,48 @@
+<footer class="site-footer">
+  <div class="page-width">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <a class="footer-logo" href="{{ routes.root_url }}"><span class="logo-mark logo-mark--light">A</span><span class="logo-wordmark">Ababeel <em>Fashions</em></span></a>
+        <p>{{ section.settings.footer_text }}</p>
+        <div class="footer-socials">
+          {% if settings.instagram_url != blank %}<a href="{{ settings.instagram_url }}" target="_blank" rel="noopener">Instagram <span>↗</span></a>{% endif %}
+          {% if settings.facebook_url != blank %}<a href="{{ settings.facebook_url }}" target="_blank" rel="noopener">Facebook <span>↗</span></a>{% endif %}
+        </div>
+      </div>
+      <div class="footer-column">
+        <h3>Explore</h3>
+        <a href="{{ routes.collections_url }}">Shop all</a>
+        <a href="{{ routes.collections_url }}/womens-ethnic-wear">Women</a>
+        <a href="{{ routes.collections_url }}/kids-wear">Kids</a>
+        <a href="{{ pages['custom-tailoring'].url | default: '/pages/custom-tailoring' }}">Custom tailoring</a>
+      </div>
+      <div class="footer-column">
+        <h3>Help</h3>
+        <a href="{{ pages['shipping-delivery'].url | default: '/pages/shipping-delivery' }}">Shipping & delivery</a>
+        <a href="{{ pages['returns-exchanges'].url | default: '/pages/returns-exchanges' }}">Returns & exchanges</a>
+        <a href="{{ pages['contact'].url | default: '/pages/contact' }}">Contact us</a>
+        <a href="https://wa.me/{{ settings.whatsapp_number | remove: '+' | remove: ' ' }}" target="_blank" rel="noopener">WhatsApp us</a>
+      </div>
+      <div class="footer-column footer-contact">
+        <h3>Visit Ababeel</h3>
+        <p>{{ settings.store_address }}</p>
+        {% if settings.store_phone != blank %}<a href="tel:{{ settings.store_phone | remove: ' ' }}">{{ settings.store_phone }}</a>{% endif %}
+        <p class="footer-hours">{{ section.settings.store_hours }}</p>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© {{ 'now' | date: '%Y' }} {{ shop.name }}. All rights reserved.</span>
+      <div><a href="{{ pages['privacy-policy'].url | default: '/policies/privacy-policy' }}">Privacy</a><a href="{{ pages['terms-of-service'].url | default: '/policies/terms-of-service' }}">Terms</a></div>
+    </div>
+  </div>
+</footer>
+
+{% schema %}
+{
+  "name": "Footer",
+  "settings": [
+    { "type": "textarea", "id": "footer_text", "label": "About text", "default": "Thoughtfully chosen ethnic wear for Kerala celebrations, everyday elegance, and every beautiful in-between moment." },
+    { "type": "text", "id": "store_hours", "label": "Store hours", "default": "Open daily · Please WhatsApp before visiting" }
+  ]
+}
+{% endschema %}

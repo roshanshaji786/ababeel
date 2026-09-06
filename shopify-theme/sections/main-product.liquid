@@ -1,0 +1,62 @@
+<section class="product-section section-spacing">
+  <div class="page-width">
+    <div class="breadcrumbs"><a href="{{ routes.root_url }}">Home</a><span>/</span>{% if product.collections.first %}<a href="{{ product.collections.first.url }}">{{ product.collections.first.title }}</a><span>/</span>{% endif %}<span>{{ product.title }}</span></div>
+    <div class="product-layout">
+      <div class="product-gallery">
+        {% for media in product.media %}
+          <div class="product-gallery__item{% if forloop.first %} product-gallery__item--featured{% endif %}">
+            {% case media.media_type %}
+              {% when 'image' %}{{ media | image_url: width: 1400 | image_tag: widths: '480, 720, 1000, 1400', loading: 'lazy', alt: media.alt | default: product.title }}
+              {% when 'video' %}{{ media | video_tag: controls: true, image_size: '1400x' }}
+              {% when 'external_video' %}{{ media | external_video_tag }}
+              {% when 'model' %}{{ media | model_viewer_tag }}
+            {% endcase %}
+          </div>
+        {% else %}
+          <div class="product-gallery__item product-gallery__item--empty">{{ 'product-1' | placeholder_svg_tag: 'placeholder-svg' }}</div>
+        {% endfor %}
+      </div>
+      <div class="product-details">
+        {% if product.vendor != blank %}<p class="eyebrow">{{ product.vendor }}</p>{% endif %}
+        <h1>{{ product.title }}</h1>
+        <div class="product-details__price">{% render 'price', product: product %}</div>
+        {% if section.settings.show_delivery_note %}<p class="product-delivery-note"><span>✦</span> All-India delivery in 3–7 days · COD available</p>{% endif %}
+        {% if product.description != blank %}<div class="product-description rte">{{ product.description }}</div>{% endif %}
+        {% form 'product', product, class: 'product-form', id: 'product-form-' | append: section.id, data-product-form: '' %}
+          {% unless product.has_only_default_variant %}
+            <div class="field">
+              <label for="Variant-{{ section.id }}">{{ section.settings.variant_label }}</label>
+              <select id="Variant-{{ section.id }}" name="id" class="select-field" data-variant-select>
+                {% for variant in product.variants %}
+                  <option value="{{ variant.id }}"{% if variant == product.selected_or_first_available_variant %} selected{% endif %}{% unless variant.available %} disabled{% endunless %}>
+                    {{ variant.title }} — {{ variant.price | money }}{% unless variant.available %} — Sold out{% endunless %}
+                  </option>
+                {% endfor %}
+              </select>
+            </div>
+          {% else %}<input type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id }}">{% endunless %}
+          <div class="product-form__row">
+            <div class="field quantity-field"><label for="Quantity-{{ section.id }}">Quantity</label><div class="quantity-control"><button type="button" data-quantity-minus aria-label="Decrease quantity">−</button><input id="Quantity-{{ section.id }}" type="number" name="quantity" value="1" min="1" aria-label="Quantity"><button type="button" data-quantity-plus aria-label="Increase quantity">+</button></div></div>
+            <button type="submit" name="add" class="button button--dark button--full"{% unless product.available %} disabled{% endunless %}>{% if product.available %}Add to cart{% else %}Sold out{% endif %}</button>
+          </div>
+          <button type="button" class="button button--whatsapp button--full" data-whatsapp-product data-whatsapp-number="{{ settings.whatsapp_number | remove: '+' | remove: ' ' }}" data-product-title="{{ product.title | escape }}" data-variant-title="{{ product.selected_or_first_available_variant.title | escape }}">Ask about this piece on WhatsApp <span aria-hidden="true">↗</span></button>
+        {% endform %}
+        <div class="product-accordions">
+          <details open><summary>Size & fit <span>+</span></summary><div class="rte"><p>Women's sizes M (38) to XXL (44). Please check the size information in the product description or WhatsApp us for help before ordering.</p></div></details>
+          <details><summary>Delivery & COD <span>+</span></summary><div class="rte"><p>We deliver across India in approximately 3–7 days. COD availability can vary by pincode and order value.</p></div></details>
+          <details><summary>Need a custom fit? <span>+</span></summary><div class="rte"><p>For custom tailoring or measurements, <a href="https://wa.me/{{ settings.whatsapp_number | remove: '+' | remove: ' ' }}" target="_blank" rel="noopener">message us on WhatsApp</a> before placing your order.</p></div></details>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Main product",
+  "settings": [
+    { "type": "checkbox", "id": "show_delivery_note", "label": "Show delivery note", "default": true },
+    { "type": "text", "id": "variant_label", "label": "Option label", "default": "Choose your size" }
+  ]
+}
+{% endschema %}

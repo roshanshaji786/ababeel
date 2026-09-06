@@ -1,0 +1,14 @@
+<div class="cart-drawer" data-cart-drawer aria-hidden="true">
+  <button class="cart-drawer__backdrop" type="button" data-cart-close aria-label="Close cart"></button>
+  <aside class="cart-drawer__panel" role="dialog" aria-modal="true" aria-labelledby="CartDrawerTitle">
+    <div class="cart-drawer__header"><h2 id="CartDrawerTitle">Your bag <span data-cart-count>({{ cart.item_count }})</span></h2><button type="button" class="cart-drawer__close" data-cart-close aria-label="Close cart">×</button></div>
+    <div class="cart-drawer__body" data-cart-drawer-content>
+      {% if cart.item_count > 0 %}
+        {% for item in cart.items %}<div class="drawer-item"><a href="{{ item.url }}" class="drawer-item__image">{% if item.image %}{{ item.image | image_url: width: 180 | image_tag: alt: item.product.title }}{% else %}{{ 'product-1' | placeholder_svg_tag: 'placeholder-svg' }}{% endif %}</a><div><h3><a href="{{ item.url }}">{{ item.product.title }}</a></h3>{% unless item.product.has_only_default_variant %}<p>{{ item.variant.title }}</p>{% endunless %}<strong>{{ item.final_line_price | money }}</strong><a class="remove-link" href="{{ item.url_to_remove }}">Remove</a></div></div>{% endfor %}
+      {% else %}<div class="cart-drawer__empty"><span class="empty-collection__mark">A</span><h3>Your bag is empty.</h3><p>Find something beautiful for your next occasion.</p><a href="{{ routes.collections_url }}" class="button button--dark">Start shopping</a></div>{% endif %}
+    </div>
+    {% if cart.item_count > 0 %}<div class="cart-drawer__footer"><div class="cart-summary__line"><span>Subtotal</span><strong>{{ cart.total_price | money }}</strong></div><p>Shipping and taxes calculated at checkout.</p><a class="button button--dark button--full" href="{{ routes.cart_url }}">View cart & checkout <span>→</span></a><button class="button button--whatsapp button--full" type="button" data-whatsapp-cart data-whatsapp-number="{{ settings.whatsapp_number | remove: '+' | remove: ' ' }}">Need help? WhatsApp us</button></div>{% endif %}
+  </aside>
+</div>
+
+{% schema %}{ "name": "Cart drawer", "settings": [] }{% endschema %}
