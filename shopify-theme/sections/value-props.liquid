@@ -7,6 +7,11 @@
       </div>
     {% endfor %}
   </div>
+  <div class="value-props__ticker" aria-hidden="true">
+    <div class="value-props__ticker-track">
+      {% for i in (1..2) %}{% for block in section.blocks %}<span>{{ block.settings.icon }} {{ block.settings.title }} — {{ block.settings.text }}</span>{% endfor %}<span>✦ COD available across India</span><span>✦ WhatsApp support +91 70120 45854</span>{% endfor %}
+    </div>
+  </div>
 </section>
 
 {% schema %}

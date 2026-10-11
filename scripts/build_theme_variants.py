@@ -360,14 +360,80 @@ h1, h2 { font-family: var(--serif); font-weight: 500; letter-spacing: -.02em; }
 ]
 
 
+PREMIUM = {
+    "heritage-royale": """
+.value-props__ticker { display: block; }
+.value-props__ticker-track { animation: none; width: auto; flex-wrap: wrap; justify-content: center; gap: 8px 28px; padding: 12px 16px; }
+.value-props__ticker-track span { color: #6d1f2c; }
+.countdown strong { font-family: var(--serif); color: #6d1f2c; font-size: 24px; }
+.free-ship-progress__track span { background: #b98a3e; }
+.trust-row li span { color: #b98a3e; }
+.product-gallery__thumb { border-radius: 0; }
+.back-to-top { border-radius: 0; border-color: #b98a3e; color: #6d1f2c; }
+""",
+    "bazaar-pop": """
+.value-props__ticker { display: block; background: #ffb100; border-top: 2px solid #12142b; }
+.value-props__ticker-track span { color: #12142b; font-weight: 800; }
+.countdown strong { color: #f22c6d; font-weight: 900; }
+.free-ship-progress__track span { background: linear-gradient(90deg, #f22c6d, #6a5cff); }
+.trust-row li { border: 2px solid #12142b; border-radius: 999px; padding: 6px 12px; background: #fff; color: #12142b; }
+.product-gallery__thumb { border-radius: 10px; }
+.back-to-top { border-radius: 12px; border: 2px solid #12142b; box-shadow: 3px 3px 0 #12142b; }
+""",
+    "atelier-blanc": """
+.countdown strong { font-weight: 200; letter-spacing: .3em; }
+.free-ship-progress__track { height: 2px; border-radius: 0; }
+.free-ship-progress__track span { background: #191919; border-radius: 0; }
+.trust-row li { font-weight: 400; letter-spacing: .18em; }
+.product-gallery__thumb { border-radius: 0; }
+.back-to-top { border-radius: 0; border-color: #191919; color: #191919; }
+.quantity-control--drawer { border-radius: 0; }
+""",
+    "gully-drop": """
+.value-props__ticker { display: block; background: #ccff00; border-top: 1px solid #0d0e10; }
+.value-props__ticker-track span { color: #0d0e10; font-weight: 700; }
+.countdown strong { font-family: var(--serif); color: #ccff00; font-size: 30px; }
+.free-ship-progress__track span { background: #ccff00; }
+.trust-row li { color: #f2f1ea; }
+.trust-row li span { color: #ccff00; }
+.product-gallery__thumb { border-radius: 0; border-color: #2a2d33; }
+.back-to-top { border-radius: 0; background: #15171b; border-color: #ccff00; color: #ccff00; }
+.quantity-control--drawer { border-color: #2a2d33; }
+""",
+    "meadow-muse": """
+.value-props__ticker { display: block; }
+.value-props__ticker-track { animation-duration: 40s; }
+.value-props__ticker-track span { color: #7d8c6f; }
+.countdown strong { font-family: var(--serif); color: #c9704f; }
+.free-ship-progress__track span { background: #7d8c6f; }
+.trust-row li { color: #8a7f6d; }
+.product-gallery__thumb { border-radius: 12px; }
+.back-to-top { background: #7d8c6f; border: 0; color: #fff; }
+""",
+}
+
+
 def build_variant(v):
     dest = BUILD / v["slug"]
     if dest.exists():
         shutil.rmtree(dest)
     shutil.copytree(SRC, dest)
 
-    # 1. variant css
-    (dest / "assets" / "variant.css").write_text(v["css"], encoding="utf-8")
+    # 1. variant css (concept + premium component styling)
+    (dest / "assets" / "variant.css").write_text(v["css"] + PREMIUM[v["slug"]], encoding="utf-8")
+
+    # 1b. per-variant static preview snapshot for the live test matrix
+    snapshot = (ROOT / "preview" / "index.html").read_text(encoding="utf-8")
+    snapshot = snapshot.replace('<body class="template-index">', f'<body class="theme-{v["slug"]} template-index">')
+    snapshot = snapshot.replace(
+        '<link rel="stylesheet" href="/shopify-theme/assets/advanced.css">',
+        '<link rel="stylesheet" href="/shopify-theme/assets/advanced.css">\n  '
+        + v["fonts"]
+        + f'\n  <link rel="stylesheet" href="/build/variants/{v["slug"]}/assets/variant.css">',
+    )
+    preview_dir = ROOT / "preview" / v["slug"]
+    preview_dir.mkdir(parents=True, exist_ok=True)
+    (preview_dir / "index.html").write_text(snapshot, encoding="utf-8")
 
     # 2. theme.liquid: fonts + variant.css + body class
     tl = (dest / "layout" / "theme.liquid").read_text(encoding="utf-8")

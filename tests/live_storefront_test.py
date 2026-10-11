@@ -20,6 +20,9 @@ from pathlib import Path
 from urllib.parse import urljoin, urlparse
 
 BASE_URL = os.environ.get("BASE_URL", "http://127.0.0.1:4173").rstrip("/")
+PAGE = os.environ.get("PAGE", "/preview/")
+if not PAGE.endswith("/"):
+    PAGE += "/"
 ROOT = Path(__file__).resolve().parents[1]
 THEME = ROOT / "shopify-theme"
 PREVIEW = ROOT / "preview" / "index.html"
@@ -77,7 +80,7 @@ def test_live_page_matrix() -> None:
     page_snapshots: list[str] = []
     for agent_index, agent in enumerate(mobile_agents):
         for query in mobile_queries:
-            status, body, headers = fetch("/preview/" + query, agent)
+            status, body, headers = fetch(PAGE + query, agent)
             label = f"mobile page {agent_index + 1}/{len(mobile_agents)} query {query or 'none'}"
             check(f"{label} status", status == 200, str(headers.get("_error", status)))
             check(f"{label} content type", "text/html" in headers.get("_content_type", ""), headers.get("_content_type", ""))
@@ -99,7 +102,7 @@ def test_live_page_matrix() -> None:
     desktop_queries = ["", "?utm_source=google", "?utm_source=instagram&utm_medium=organic"]
     for agent_index, agent in enumerate(desktop_agents):
         for query in desktop_queries:
-            status, body, headers = fetch("/preview/" + query, agent)
+            status, body, headers = fetch(PAGE + query, agent)
             label = f"desktop page {agent_index + 1}/{len(desktop_agents)} query {query or 'none'}"
             check(f"{label} status", status == 200, str(headers.get("_error", status)))
             check(f"{label} content type", "text/html" in headers.get("_content_type", ""), headers.get("_content_type", ""))
@@ -108,7 +111,7 @@ def test_live_page_matrix() -> None:
 
     # Ensure the live page is stable across a few cache-busting request IDs.
     for request_number in range(1, 11):
-        status, body, headers = fetch(f"/preview/?live_test={request_number}", mobile_agents[request_number % len(mobile_agents)])
+        status, body, headers = fetch(f"{PAGE}?live_test={request_number}", mobile_agents[request_number % len(mobile_agents)])
         check(f"cache-bust request {request_number} status", status == 200, headers.get("_error", ""))
         check(f"cache-bust request {request_number} non-empty", len(body) > 10000, f"{len(body)} bytes")
 
@@ -116,14 +119,14 @@ def test_live_page_matrix() -> None:
 
 
 def test_live_assets_and_links() -> None:
-    status, html, headers = fetch("/preview/")
+    status, html, headers = fetch(PAGE)
     check("canonical preview status", status == 200, headers.get("_error", ""))
     check("canonical preview body", len(html) > 10000, f"{len(html)} bytes")
 
     references = set(re.findall(r'(?:src|href)="([^"]+)"', html))
     local_references = []
     for reference in references:
-        absolute = urljoin(f"{BASE_URL}/preview/", reference)
+        absolute = urljoin(f"{BASE_URL}{PAGE}", reference)
         parsed = urlparse(absolute)
         if parsed.netloc == urlparse(BASE_URL).netloc and parsed.path not in {"/", "#"}:
             local_references.append(parsed.path)
@@ -198,6 +201,43 @@ def test_static_theme_quality() -> None:
     check("layout loads cart drawer", "section 'cart-drawer'" in layout)
     check("layout has structured data", "ClothingStore" in layout)
     check("layout has canonical link", "canonical_url" in layout)
+    check("layout renders SEO meta snippet", "render 'seo-meta'" in layout)
+    check("layout has WebSite structured data", '"@type": "WebSite"' in layout)
+    check("layout has back to top", "data-back-to-top" in layout)
+
+    # Premium commerce layer assertions
+    check("HTML has OG title", 'property="og:title"' in html)
+    check("HTML has OG image", 'property="og:image"' in html)
+    check("HTML has twitter card", 'name="twitter:card"' in html)
+    check("HTML has robots meta", 'name="robots"' in html)
+    check("HTML has free shipping progress", "data-free-ship" in html)
+    check("HTML has drawer quantity controls", "quantity-control--drawer" in html)
+    check("HTML has countdown timer", "data-countdown" in html)
+    check("HTML has marquee ticker", "value-props__ticker" in html)
+    check("HTML has hero fetchpriority", 'fetchpriority="high"' in html)
+    check("advanced CSS has focus-visible", ":focus-visible" in advanced_css)
+    check("advanced CSS honours reduced motion", "prefers-reduced-motion" in advanced_css)
+    check("advanced CSS styles free-ship bar", ".free-ship-progress__track" in advanced_css)
+    check("advanced CSS styles countdown", ".countdown" in advanced_css)
+    check("advanced CSS animates ticker", "@keyframes ab-ticker" in advanced_css)
+    check("advanced CSS styles back to top", ".back-to-top" in advanced_css)
+    check("advanced CSS styles trust row", ".trust-row" in advanced_css)
+    check("advanced CSS styles gallery thumbs", ".product-gallery__thumb" in advanced_css)
+    check("advanced CSS sticky buy box", "position: sticky" in advanced_css)
+    check("JavaScript changes drawer quantities", "/cart/change.js" in javascript)
+    check("JavaScript runs countdown", "data-countdown" in javascript)
+    check("JavaScript switches gallery thumbs", "product-gallery__thumb" in javascript)
+    check("JavaScript wires back to top", "data-back-to-top" in javascript)
+    check("JavaScript free-ship threshold", "FREE_SHIP_THRESHOLD" in javascript)
+    product_section = (THEME / "sections" / "main-product.liquid").read_text(encoding="utf-8")
+    check("product page has Product JSON-LD", '"@type": "Product"' in product_section)
+    check("product page has trust row", "trust-row" in product_section)
+    check("product page has gallery thumbs", "product-gallery__thumbs" in product_section)
+    drawer_section = (THEME / "sections" / "cart-drawer.liquid").read_text(encoding="utf-8")
+    check("cart drawer has free-ship progress", "data-free-ship" in drawer_section)
+    check("cart drawer has quantity controls", "quantity-control--drawer" in drawer_section)
+    seo_snippet = (THEME / "snippets" / "seo-meta.liquid").read_text(encoding="utf-8")
+    check("SEO snippet has OG + twitter", "og:title" in seo_snippet and "twitter:card" in seo_snippet)
 
     expected_files = [
         "layout/theme.liquid", "config/settings_schema.json", "config/settings_data.json",

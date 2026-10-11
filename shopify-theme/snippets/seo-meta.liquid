@@ -1,0 +1,22 @@
+{%- assign ab_og_type = 'website' -%}
+{%- if template.name == 'product' -%}{%- assign ab_og_type = 'product' -%}{%- endif -%}
+{%- assign ab_fallback_desc = 'Modest, elegant ethnic wear from Ababeel Fashions, Thiruvananthapuram. Women, kids and wedding edits. All-India delivery in 3-7 days, COD available.' -%}
+<meta name="robots" content="index, follow">
+<meta property="og:site_name" content="{{ shop.name | escape }}">
+<meta property="og:type" content="{{ ab_og_type }}">
+<meta property="og:title" content="{{ page_title | default: shop.name | escape }}">
+<meta property="og:description" content="{{ page_description | default: ab_fallback_desc | escape }}">
+<meta property="og:url" content="{{ canonical_url }}">
+{%- if settings.logo != blank -%}
+  <meta property="og:image" content="{{ settings.logo | image_url: width: 1200 | prepend: 'https:' }}">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+{%- endif -%}
+{%- if template.name == 'product' and product.featured_image -%}
+  <meta property="og:image" content="{{ product.featured_image | image_url: width: 1200 | prepend: 'https:' }}">
+  <meta property="product:price:amount" content="{{ product.price | divided_by: 100.0 }}">
+  <meta property="product:price:currency" content="INR">
+{%- endif -%}
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="{{ page_title | default: shop.name | escape }}">
+<meta name="twitter:description" content="{{ page_description | default: ab_fallback_desc | escape }}">

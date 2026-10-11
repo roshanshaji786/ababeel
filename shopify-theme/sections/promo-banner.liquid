@@ -2,7 +2,7 @@
   <div class="page-width">
     <div class="promo-banner__inner">
       <div><p class="eyebrow">{{ section.settings.eyebrow }}</p><h2>{{ section.settings.heading }}</h2><p>{{ section.settings.text }}</p></div>
-      <div class="promo-banner__action"><a class="button button--light" href="{{ section.settings.button_link | default: routes.collections_url }}">{{ section.settings.button_label }} <span aria-hidden="true">↗</span></a><small>{{ section.settings.note }}</small></div>
+      <div class="promo-banner__action"><div class="countdown" data-countdown="{{ section.settings.countdown_hours }}" role="timer" aria-label="Offer ends in"><small>Offer ends in</small><strong><span data-count-h>48</span>h : <span data-count-m>00</span>m : <span data-count-s>00</span>s</strong></div><a class="button button--light" href="{{ section.settings.button_link | default: routes.collections_url }}">{{ section.settings.button_label }} <span aria-hidden="true">↗</span></a><small>{{ section.settings.note }}</small></div>
     </div>
   </div>
 </section>
@@ -16,7 +16,8 @@
     { "type": "textarea", "id": "text", "label": "Text", "default": "Discover elegant ethnic styles for the moments you will remember." },
     { "type": "text", "id": "button_label", "label": "Button label", "default": "Shop the edit" },
     { "type": "url", "id": "button_link", "label": "Button link" },
-    { "type": "text", "id": "note", "label": "Small note", "default": "Need help with size? WhatsApp us." }
+    { "type": "text", "id": "note", "label": "Small note", "default": "Need help with size? WhatsApp us." },
+    { "type": "range", "id": "countdown_hours", "label": "Countdown hours", "min": 1, "max": 168, "step": 1, "default": 48 }
   ],
   "presets": [{ "name": "Promotional banner" }]
 }

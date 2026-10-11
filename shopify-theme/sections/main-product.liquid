@@ -2,7 +2,7 @@
   <div class="page-width">
     <div class="breadcrumbs"><a href="{{ routes.root_url }}">Home</a><span>/</span>{% if product.collections.first %}<a href="{{ product.collections.first.url }}">{{ product.collections.first.title }}</a><span>/</span>{% endif %}<span>{{ product.title }}</span></div>
     <div class="product-layout">
-      <div class="product-gallery">
+      <div class="product-gallery" data-gallery>
         {% for media in product.media %}
           <div class="product-gallery__item{% if forloop.first %} product-gallery__item--featured{% endif %}">
             {% case media.media_type %}
@@ -15,6 +15,15 @@
         {% else %}
           <div class="product-gallery__item product-gallery__item--empty">{{ 'product-1' | placeholder_svg_tag: 'placeholder-svg' }}</div>
         {% endfor %}
+        {% if product.media.size > 1 %}
+          <div class="product-gallery__thumbs" role="group" aria-label="Product images">
+            {% for media in product.media limit: 5 %}
+              <button type="button" class="product-gallery__thumb{% if forloop.first %} is-active{% endif %}" data-thumb="{{ forloop.index0 }}" aria-label="Show image {{ forloop.index }} of {{ product.title | escape }}" aria-current="{% if forloop.first %}true{% else %}false{% endif %}">
+                {{ media | image_url: width: 160 | image_tag: loading: 'lazy', alt: media.alt | default: product.title }}
+              </button>
+            {% endfor %}
+          </div>
+        {% endif %}
       </div>
       <div class="product-details">
         {% if product.vendor != blank %}<p class="eyebrow">{{ product.vendor }}</p>{% endif %}
@@ -41,6 +50,12 @@
           </div>
           <button type="button" class="button button--whatsapp button--full" data-whatsapp-product data-whatsapp-number="{{ settings.whatsapp_number | remove: '+' | remove: ' ' }}" data-product-title="{{ product.title | escape }}" data-variant-title="{{ product.selected_or_first_available_variant.title | escape }}">Ask about this piece on WhatsApp <span aria-hidden="true">↗</span></button>
         {% endform %}
+        <ul class="trust-row" aria-label="Shopping guarantees">
+          <li><span aria-hidden="true">✦</span> COD available</li>
+          <li><span aria-hidden="true">↷</span> 7-day exchange</li>
+          <li><span aria-hidden="true">⌁</span> UPI & cards</li>
+          <li><span aria-hidden="true">↗</span> All-India 3–7 days</li>
+        </ul>
         <div class="product-accordions">
           <details open><summary>Size & fit <span>+</span></summary><div class="rte"><p>Women's sizes M (38) to XXL (44). Please check the size information in the product description or WhatsApp us for help before ordering.</p></div></details>
           <details><summary>Delivery & COD <span>+</span></summary><div class="rte"><p>We deliver across India in approximately 3–7 days. COD availability can vary by pincode and order value.</p></div></details>
@@ -49,6 +64,23 @@
       </div>
     </div>
   </div>
+  <script type="application/ld+json">{
+    "@context": "https://schema.org",
+    "@type": "Product",
+    "name": {{ product.title | json }},
+    "url": {{ shop.url | append: product.url | json }},
+    "description": {{ product.description | strip_html | truncate: 500 | json }},
+    "sku": {{ product.selected_or_first_available_variant.sku | default: product.handle | json }},
+    "brand": { "@type": "Brand", "name": {{ product.vendor | default: shop.name | json }} },
+    {% if product.featured_image %}"image": [{{ product.featured_image | image_url: width: 1200 | prepend: 'https:' | json }}],{% endif %}
+    "offers": {
+      "@type": "Offer",
+      "priceCurrency": "INR",
+      "price": {{ product.price | divided_by: 100.0 }},
+      "availability": {% if product.available %}"https://schema.org/InStock"{% else %}"https://schema.org/OutOfStock"{% endif %},
+      "url": {{ shop.url | append: product.url | json }}
+    }
+  }</script>
 </section>
 
 {% schema %}

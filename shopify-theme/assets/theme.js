@@ -102,6 +102,8 @@ document.addEventListener('DOMContentLoaded', () => {
         drawer.replaceWith(nextDrawer);
         bindDrawer();
         bindWhatsApp();
+        bindDrawerQuantity();
+        updateFreeShip();
       }
     } catch (error) { console.warn('Cart drawer refresh failed', error); }
   };
@@ -192,5 +194,97 @@ document.addEventListener('DOMContentLoaded', () => {
       filterToggle.setAttribute('aria-expanded', String(open));
     });
     $('[data-filter-close]', filterPanel)?.addEventListener('click', () => filterPanel.classList.remove('is-open'));
+  }
+
+  /* ---- Premium commerce layer: drawer quantity, free-ship progress, countdown, gallery, back-to-top ---- */
+  const inr = (cents) => `₹${(cents / 100).toLocaleString('en-IN')}`;
+  const FREE_SHIP_THRESHOLD = 99900;
+
+  const updateFreeShip = async () => {
+    const box = $('[data-free-ship]');
+    if (!box) return;
+    try {
+      const response = await fetch('/cart.js', { headers: { Accept: 'application/json' } });
+      if (!response.ok) return;
+      const cart = await response.json();
+      const text = $('[data-free-ship-text]', box);
+      const bar = $('[data-free-ship-bar]', box);
+      const remaining = FREE_SHIP_THRESHOLD - cart.total_price;
+      if (remaining <= 0) {
+        text.textContent = 'You unlocked FREE shipping across India 🎉';
+      } else {
+        text.textContent = `You are ${inr(remaining)} away from FREE shipping`;
+      }
+      bar.style.width = `${Math.min(100, Math.round((cart.total_price / FREE_SHIP_THRESHOLD) * 100))}%`;
+    } catch (error) { /* static preview or offline: leave neutral */ }
+  };
+
+  const bindDrawerQuantity = () => {
+    $$('[data-quantity-plus][data-line], [data-quantity-minus][data-line]').forEach((button) => {
+      if (button.dataset.bound) return;
+      button.dataset.bound = 'true';
+      button.addEventListener('click', async () => {
+        const line = parseInt(button.dataset.line, 10);
+        const counter = $('[data-line-qty]', button.parentElement);
+        const current = counter ? parseInt(counter.textContent, 10) || 1 : 1;
+        const quantity = button.hasAttribute('data-quantity-plus') ? current + 1 : Math.max(1, current - 1);
+        try {
+          const response = await fetch('/cart/change.js', {
+            method: 'POST',
+            headers: { Accept: 'application/json', 'Content-Type': 'application/json' },
+            body: JSON.stringify({ line, quantity }),
+          });
+          if (!response.ok) throw new Error('change failed');
+          const cart = await response.json();
+          updateCartCount(cart.item_count);
+          await refreshDrawer();
+          updateFreeShip();
+        } catch (error) { console.warn('Quantity update failed', error); }
+      });
+    });
+  };
+  bindDrawerQuantity();
+  updateFreeShip();
+
+  $$('[data-countdown]').forEach((element) => {
+    const hours = parseFloat(element.dataset.countdown) || 48;
+    const deadline = Date.now() + hours * 3600 * 1000;
+    const pad = (value) => String(value).padStart(2, '0');
+    const tick = () => {
+      const delta = Math.max(0, deadline - Date.now());
+      const h = Math.floor(delta / 3600000);
+      const m = Math.floor((delta % 3600000) / 60000);
+      const s = Math.floor((delta % 60000) / 1000);
+      const hEl = $('[data-count-h]', element);
+      const mEl = $('[data-count-m]', element);
+      const sEl = $('[data-count-s]', element);
+      if (hEl) hEl.textContent = pad(h);
+      if (mEl) mEl.textContent = pad(m);
+      if (sEl) sEl.textContent = pad(s);
+    };
+    tick();
+    setInterval(tick, 1000);
+  });
+
+  $$('.product-gallery__thumb').forEach((thumb) => {
+    thumb.addEventListener('click', () => {
+      const index = parseInt(thumb.dataset.thumb, 10);
+      $$('.product-gallery__item').forEach((item, i) => item.classList.toggle('product-gallery__item--featured', i === index));
+      $$('.product-gallery__thumb').forEach((t, i) => {
+        t.classList.toggle('is-active', i === index);
+        t.setAttribute('aria-current', String(i === index));
+      });
+    });
+  });
+
+  const backToTop = $('[data-back-to-top]');
+  if (backToTop) {
+    const onScroll = () => backToTop.classList.toggle('is-visible', window.scrollY > 600);
+    window.addEventListener('scroll', onScroll, { passive: true });
+    onScroll();
+    backToTop.addEventListener('click', () => {
+      const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      window.scrollTo({ top: 0, behavior: reduce ? 'auto' : 'smooth' });
+    });
   }
 });

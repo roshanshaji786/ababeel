@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="theme-color" content="{{ settings.color_accent }}">
     <link rel="canonical" href="{{ canonical_url }}">
+    {% render 'seo-meta' %}
     <link rel="preconnect" href="https://cdn.shopify.com" crossorigin>
     <title>
       {{ page_title }}
@@ -47,6 +48,14 @@
       "telephone": {{ settings.store_phone | json }},
       "address": { "@type": "PostalAddress", "streetAddress": {{ settings.store_address | strip_newlines | json }}, "addressLocality": "Thiruvananthapuram", "addressRegion": "Kerala", "addressCountry": "IN" },
       "sameAs": [{% if settings.instagram_url != blank %}{{ settings.instagram_url | json }}{% endif %}]
+    }</script>
+    <button class="back-to-top" type="button" data-back-to-top aria-label="Back to top">↑</button>
+    <script type="application/ld+json">{
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      "name": {{ shop.name | json }},
+      "url": {{ shop.url | json }},
+      "potentialAction": { "@type": "SearchAction", "target": {{ shop.url | append: '/search?q={search_term_string}' | json }}, "query-input": "required name=search_term_string" }
     }</script>
     <script src="{{ 'theme.js' | asset_url }}" defer="defer"></script>
   </body>
