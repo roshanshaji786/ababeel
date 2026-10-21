@@ -1,0 +1,9 @@
+node_modules
+dist
+dev-dist
+.localdb
+.env
+.env.*
+!.env.example
+.vercel
+*.log
