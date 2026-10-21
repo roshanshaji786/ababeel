@@ -367,7 +367,7 @@ footer .about { grid-column: 1 / -1; }
 }
 
 /* Admin */
-.admin { padding: 16px 0; display: grid; gap: 16px; }
+.admin { padding-top: 16px; padding-bottom: 16px; display: grid; gap: 16px; }
 .seg { display: grid; grid-template-columns: 1fr 1fr; gap: 4px; padding: 4px; border-radius: 12px; background: var(--surface-2); }
 .seg button { min-height: 44px; border: 0; border-radius: 9px; background: transparent; font-weight: 700; }
 .seg button.on { background: var(--surface); box-shadow: var(--shadow); }
